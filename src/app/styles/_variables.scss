@@ -1,0 +1,24 @@
+:root {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --card-bg: #fff;
+  --card-header-bg: #0d6efd;
+  --card-header-text: #fff;
+  --table-bg: #fff;
+  --table-text: #212529;
+  --list-item-bg: #fff;
+  --list-item-text: #212529;
+  --text-highlight: rgb(255, 255, 0);
+}
+
+body.dark-theme {
+  --bg-color: #181a1b;
+  --text-color: #f8f9fa;
+  --card-bg: #23272b;
+  --card-header-bg: #212529;
+  --card-header-text: #f8f9fa;
+  --table-bg: #23272b;
+  --table-text: #f8f9fa;
+  --list-item-bg: #23272b;
+  --list-item-text: #f8f9fa;
+}
