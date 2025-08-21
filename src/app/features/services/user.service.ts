@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { User } from '../types/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,9 +9,9 @@ import { Observable } from 'rxjs';
 export class UserService {
   private apiUrl = 'https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
-  getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.apiUrl);
   }
 }

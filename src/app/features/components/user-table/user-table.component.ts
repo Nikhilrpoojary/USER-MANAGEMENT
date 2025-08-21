@@ -1,11 +1,10 @@
-import { Component, inject, NgModule, OnInit } from '@angular/core';
+import { Component, inject, NgModule, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HighlightPipe } from '../../pipes/highlight.pipe';
-import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { User } from '../../types/user.model';
 
 @Component({
   selector: 'app-user-table',
@@ -14,41 +13,35 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./user-table.component.scss']
 })
 export class UserTableComponent implements OnInit {
-  users: any[] = [];
+  users: Array<User> = [];
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   headers: string[] = [];
   searchText: string = '';
-  filteredData: any[] = [];
-
+  filteredData: Array<User> = [];
   displayedColumns: string[] = [];
-  dataSource: Array<any> = [];
+  dataSource: Array<User> = [];
   editingCell: { rowIndex: number, column: string } | null = null;
-  isEditing = false;
-  clickTimeout: any = null;
-  loading = true;
+  isEditing: boolean = false;
+  clickTimeout: ReturnType<typeof setTimeout> | null = null;
+  loading: WritableSignal<boolean> = signal(true);
   private userService = inject(UserService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
-  private sanitizer = inject(DomSanitizer);
-
-
 
   ngOnInit(): void {
-    this.loading = true;
     this.userService.getUsers().subscribe(data => {
       this.users = data;
       this.displayedColumns = data.length > 0 ? Object.keys(data[0]) : [];
-      this.dataSource = data; // <-- Add this line
+      this.dataSource = data;
       this.filteredData = data;
-      this.loading = false;
+      this.loading.set(false)
     }, error => {
-      this.loading = false;
+      this.loading.set(false)
     });
 
   }
 
-  disableEditing(element: any): void {
+  disableEditing(element: User): void {
     element.isEditing = false;
   }
 
@@ -62,28 +55,28 @@ export class UserTableComponent implements OnInit {
 
 
     this.filteredData.sort((a, b) => {
-      const valueA = a[column];
-      const valueB = b[column];
+      const valueA: string | number | boolean = a[column];
+      const valueB: string | number | boolean = b[column];
 
       if (typeof valueA === 'string' && typeof valueB === 'string') {
         return this.sortDirection === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+      } else {
+
+        return this.sortDirection === 'asc' ? (valueA as number) - (valueB as number) : (valueB as number) - (valueA as number);
       }
 
-      return this.sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
     });
   }
 
   applyFilter() {
-    console.log("filteredData", this.filteredData);
-    console.log("this.dataSource", this.dataSource);
     if (!this.searchText) {
 
-      this.filteredData = [...this.dataSource]; // Reset data when search is cleared
+      this.filteredData = [...this.dataSource];
     } else {
       const searchTextLower = this.searchText.toLowerCase();
 
       this.filteredData = this.dataSource
-        .map(user => ({ ...user })) // Create a new reference for each row
+        .map(user => ({ ...user }))
         .filter(user =>
           this.displayedColumns.some(column =>
             user[column]?.toString().toLowerCase().includes(searchTextLower)
@@ -91,15 +84,12 @@ export class UserTableComponent implements OnInit {
         );
     }
 
-    console.log("filteredData", this.filteredData);
-    console.log("this.dataSource", this.dataSource);
-
   }
 
 
-  onRowClick(user: any): void {
+  onRowClick(user: User): void {
     if (this.clickTimeout) {
-      clearTimeout(this.clickTimeout); // Cancel navigation if double-click detected
+      clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
       return;
     }
@@ -107,29 +97,31 @@ export class UserTableComponent implements OnInit {
     this.clickTimeout = setTimeout(() => {
       this.navigateToDetails(user);
       this.clickTimeout = null;
-      console.log("user", user);
 
     }, 250);
   }
 
-  navigateToDetails(user: any): void {
+  navigateToDetails(user: User): void {
     this.router.navigate(['/user', user.id]);
   }
 
-  enableEditing(element: any, column: string, event: Event): void {
-    clearTimeout(this.clickTimeout);
-    console.log("clear timeout");
+  enableEditing(element: User, column: string, event: Event): void {
+    if (this.clickTimeout) {
+
+      clearTimeout(this.clickTimeout);
+    }
 
     element.isEditing = true;
 
     setTimeout(() => {
       const target = event.target as HTMLElement;
-      target.focus(); // Auto-focus on the cell when editing
+      target.focus();
     }, 0);
   }
-  saveEdit(element: any, column: string, event: any): void {
+  saveEdit(element: User, column: string, event: Event): void {
     event.preventDefault();
     element.isEditing = false;
   }
 
 }
+

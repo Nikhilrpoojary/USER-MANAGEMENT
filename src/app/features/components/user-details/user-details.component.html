@@ -1,5 +1,5 @@
 <div class="container py-5 d-flex justify-content-center align-items-center">
-    @if (isLoading) {
+    @if (isLoading()) {
     <div class="flex-grow-1 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -12,8 +12,8 @@
             <div class="mb-2">
                 <i class="bi bi-person-circle fs-1"></i>
             </div>
-            <h4 class="mb-0">{{ u.name || 'User Details' }}</h4>
-            <small *ngIf="u.email">{{ u.email }}</small>
+            <h4 class="mb-0">{{ u['name'] || 'User Details' }}</h4>
+            <small *ngIf="u['email']">{{ u['email'] }}</small>
         </div>
         <div class="card-body">
             <ul class="list-group list-group-flush">
