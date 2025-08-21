@@ -13,18 +13,18 @@ import { User } from '../../types/user.model';
   styleUrls: ['./user-table.component.scss']
 })
 export class UserTableComponent implements OnInit {
-  users: Array<User> = [];
-  sortColumn: string = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
-  headers: string[] = [];
-  searchText: string = '';
-  filteredData: Array<User> = [];
-  displayedColumns: string[] = [];
-  dataSource: Array<User> = [];
-  editingCell: { rowIndex: number, column: string } | null = null;
-  isEditing: boolean = false;
-  clickTimeout: ReturnType<typeof setTimeout> | null = null;
-  loading: WritableSignal<boolean> = signal(true);
+  protected users: Array<User> = [];
+  protected sortColumn: string = '';
+  protected sortDirection: 'asc' | 'desc' = 'asc';
+  protected headers: string[] = [];
+  protected searchText: string = '';
+  protected filteredData: Array<User> = [];
+  protected displayedColumns: string[] = [];
+  protected dataSource: Array<User> = [];
+  protected editingCell: { rowIndex: number, column: string } | null = null;
+  protected isEditing: boolean = false;
+  protected clickTimeout: ReturnType<typeof setTimeout> | null = null;
+  protected loading: WritableSignal<boolean> = signal(true);
   private userService = inject(UserService);
   private router = inject(Router);
 

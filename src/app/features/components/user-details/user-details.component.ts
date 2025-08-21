@@ -11,8 +11,8 @@ import { User } from '../../types/user.model';
   imports: [CommonModule]
 })
 export class UserDetailsComponent implements OnInit {
-  user: User | null = null;
-  isLoading :WritableSignal<boolean> = signal(true);
+  protected user: User | null = null;
+  protected isLoading: WritableSignal<boolean> = signal(true);
   private userService = inject(UserService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);

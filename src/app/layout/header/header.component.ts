@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,21 +8,26 @@ import { Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
-
-  isDarkTheme: boolean = false;
+export class HeaderComponent implements OnInit{
+  
+  protected isDarkTheme: WritableSignal<boolean> = signal(false);
   private renderer = inject(Renderer2);
   private router = inject(Router);
 
+
+  ngOnInit(): void {
+    this.renderer.addClass(document.body, this.isDarkTheme() ? 'dark-theme' : 'light-theme');
+  }
+
   toggleTheme(): void {
-    if (this.isDarkTheme) {
+    if (this.isDarkTheme()) {
       this.renderer.removeClass(document.body, 'dark-theme');
       this.renderer.addClass(document.body, 'light-theme');
     } else {
       this.renderer.removeClass(document.body, 'light-theme');
       this.renderer.addClass(document.body, 'dark-theme');
     }
-    this.isDarkTheme = !this.isDarkTheme;
+    this.isDarkTheme.set(!this.isDarkTheme());
   }
   goToUsers(): void {
     this.router.navigate(['/users']);
