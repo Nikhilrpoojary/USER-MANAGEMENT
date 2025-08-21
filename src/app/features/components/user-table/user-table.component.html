@@ -1,0 +1,53 @@
+<div class="container-fluid d-flex flex-column flex-grow-1 p-0 h-100">
+  <div class="d-flex justify-content-between align-items-center">
+    <h4 class="navbar-brand">USER DASHBOARD</h4>
+
+    <input type="text" class="w-25 form-control mb-1" placeholder="Search users..." [(ngModel)]="searchText"
+      (input)="applyFilter()" />
+  </div>
+
+  
+  @if(loading){
+  <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  }
+
+  @if(!loading){
+  <div class="table-responsive flex-grow-1 h-100">
+    <table class="table table-bordered table-hover mb-0">
+      <thead class="sticky-top">
+        <tr>
+          <th *ngFor="let column of displayedColumns" (click)="sortData(column)">
+            <div class="d-flex justify-content-between">
+              <span> {{ column | titlecase }}</span>
+              <span *ngIf="sortColumn === column">
+                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+              </span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredData" (click)="user.isEditing ? '' : onRowClick(user)">
+          <td *ngFor="let column of displayedColumns" [attr.contenteditable]="user.isEditing ? 'true' : 'false'"
+            (dblclick)="enableEditing(user, column, $event)" (blur)="disableEditing(user)"
+            (keydown.enter)="saveEdit(user, column, $event)" [innerHTML]="user[column] | highlight: searchText">
+          </td>
+        </tr>
+      </tbody>
+      
+    </table>
+    @if(filteredData.length === 0 && !loading) {
+        <div class="d-flex align-items-center justify-content-center h-50">
+          No users found.
+        </div>
+      }
+  </div>
+  }
+  
+
+</div>

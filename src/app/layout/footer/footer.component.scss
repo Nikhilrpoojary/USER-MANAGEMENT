@@ -1,0 +1,7 @@
+@use '../../styles/variables' as *;
+
+.footer {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-top: 1px solid var(--card-header-bg);
+}

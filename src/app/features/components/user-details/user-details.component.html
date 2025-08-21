@@ -1,0 +1,45 @@
+<div class="container py-5 d-flex justify-content-center align-items-center">
+    @if (isLoading) {
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    }@else {
+    @if (user; as u) {
+    <div class="card shadow-lg border-0 w-100" style="max-width: 420px;">
+        <div class="card-header text-center rounded-top">
+            <div class="mb-2">
+                <i class="bi bi-person-circle fs-1"></i>
+            </div>
+            <h4 class="mb-0">{{ u.name || 'User Details' }}</h4>
+            <small *ngIf="u.email">{{ u.email }}</small>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                @for (key of userKeys; track key) {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">{{ key | titlecase }}</span>
+                    <span class="ms-2">{{ u[key] }}</span>
+                </li>
+                }
+            </ul>
+        </div>
+        <div class="card-footer text-center">
+            <button class="btn btn-outline-primary px-4" (click)="goBack()">
+                <i class="bi bi-arrow-left"></i> Back
+            </button>
+        </div>
+    </div>
+    }@else {
+    <div class="alert alert-danger text-center w-100" style="max-width: 420px;">
+        <i class="bi bi-exclamation-triangle fs-1 mb-3 text-danger"></i>
+        <h4 class="mb-2">User Not Found</h4>
+        <p class="mb-3">The user you are looking for does not exist.</p>
+        <button class="btn btn-outline-primary px-4" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i> Back to User Dashboard
+        </button>
+    </div>
+    }
+}
+</div>

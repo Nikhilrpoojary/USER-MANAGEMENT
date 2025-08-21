@@ -1,0 +1,19 @@
+
+@use '../../../styles/variables' as *;
+
+.card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+.card-header {
+  background: var(--card-header-bg) !important;
+  color: var(--card-header-text) !important;
+}
+.card-body,
+.card-footer {
+  background: var(--card-bg);
+}
+.list-group-item {
+  background: var(--list-item-bg);
+  color: var(--list-item-text);
+}

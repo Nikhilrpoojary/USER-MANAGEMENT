@@ -1,0 +1,11 @@
+@use "../../styles/variables" as *;
+
+::ng-deep body .app-navbar {
+  background: #dfe0e1 !important;
+  color: #212529;
+}
+
+::ng-deep body .dark-theme .app-navbar {
+  background: var(--card-bg) !important;
+  color: #fff !important;
+}
